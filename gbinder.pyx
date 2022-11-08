@@ -526,8 +526,11 @@ cdef class ServiceManager:
     cdef cgbinder.GBinderServiceManager* _sm
     cdef public object func, list_func, get_service_func
 
-    def __cinit__(self, dev):
-        self._sm = cgbinder.gbinder_servicemanager_new(ensure_binary(dev))
+    def __cinit__(self, dev, sm_protocol=None, rpc_protocol=None):
+        if sm_protocol and rpc_protocol:
+            self._sm = cgbinder.gbinder_servicemanager_new2(ensure_binary(dev), ensure_binary(sm_protocol), ensure_binary(rpc_protocol))
+        else:
+            self._sm = cgbinder.gbinder_servicemanager_new(ensure_binary(dev))
 
     def __dealloc__(self):
         if self._sm is not NULL:
@@ -580,8 +583,10 @@ cdef class ServiceManager:
             return None
         cdef char** services = cgbinder.gbinder_servicemanager_list_sync(self._sm)
         services_list = []
-        i = 0
+        if services == NULL:
+            return services_list
 
+        i = 0
         while services[i] != NULL:
             services_list.append(services[i].decode())
             i += 1
@@ -671,8 +676,10 @@ cdef void service_manager_get_service_func(cgbinder.GBinderServiceManager* sm, c
 
 cdef bint service_manager_list_func(cgbinder.GBinderServiceManager* sm, char** services, void* user_data) with gil:
     services_list = []
-    i = 0
+    if services == NULL:
+        return services_list
 
+    i = 0
     while services[i] != NULL:
         services_list.append(services[i].decode())
         i += 1
