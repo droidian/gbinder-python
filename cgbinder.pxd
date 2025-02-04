@@ -1,3 +1,11 @@
+from libc.stddef cimport size_t
+from libc.stdint cimport int64_t, uint64_t
+
+cdef extern from "glib.h":
+    ctypedef size_t   gsize
+    ctypedef int64_t  gint64
+    ctypedef uint64_t guint64
+
 cdef extern from "gbinder/gbinder_types.h":
     ctypedef struct GBinderBridge:
         pass
@@ -163,7 +171,7 @@ cdef extern from "gbinder/gbinder_reader.h":
     bint gbinder_reader_read_int32(GBinderReader* reader, signed int* value)
     bint gbinder_reader_read_uint32(GBinderReader* reader, unsigned int* value)
     bint gbinder_reader_read_int64(GBinderReader* reader, signed long* value)
-    bint gbinder_reader_read_uint64(GBinderReader* reader, unsigned long* value)
+    bint gbinder_reader_read_uint64(GBinderReader* reader, guint64* value)
     bint gbinder_reader_read_float(GBinderReader* reader, float* value)
     bint gbinder_reader_read_double(GBinderReader* reader, double* value)
     int gbinder_reader_read_fd(GBinderReader* reader)
@@ -174,8 +182,8 @@ cdef extern from "gbinder/gbinder_reader.h":
     GBinderBuffer* gbinder_reader_read_buffer(GBinderReader* reader)
 
     const void* gbinder_reader_read_hidl_struct1(GBinderReader* reader, unsigned long size)
-    const void* gbinder_reader_read_hidl_vec(GBinderReader* reader, unsigned long* count, unsigned long* elemsize)
-    const void* gbinder_reader_read_hidl_vec1(GBinderReader* reader, unsigned long* count, unsigned int expected_elemsize)
+    const void* gbinder_reader_read_hidl_vec(GBinderReader* reader, gsize* count, gsize* elemsize)
+    const void* gbinder_reader_read_hidl_vec1(GBinderReader* reader, gsize* count, unsigned int expected_elemsize)
     char* gbinder_reader_read_hidl_string(GBinderReader* reader)
     const char* gbinder_reader_read_hidl_string_c(GBinderReader* reader)
     char** gbinder_reader_read_hidl_string_vec(GBinderReader* reader)
@@ -188,7 +196,7 @@ cdef extern from "gbinder/gbinder_reader.h":
     #bint gbinder_reader_read_nullable_string16_utf16(GBinderReader* reader, const unsigned short** out, unsigned long* len)
     #const unsigned short* gbinder_reader_read_string16_utf16(GBinderReader* reader,unsigned long* len)
     bint gbinder_reader_skip_string16(GBinderReader* reader)
-    const void* gbinder_reader_read_byte_array(GBinderReader* reader, unsigned long* len)
+    const void* gbinder_reader_read_byte_array(GBinderReader* reader, gsize* len)
     unsigned long gbinder_reader_bytes_read(const GBinderReader* reader)
     unsigned long gbinder_reader_bytes_remaining(const GBinderReader* reader)
     #void gbinder_reader_copy(GBinderReader* dest, const GBinderReader* src)
@@ -212,8 +220,8 @@ cdef extern from "gbinder/gbinder_remote_reply.h":
 
     bint gbinder_remote_reply_read_int32(GBinderRemoteReply* reply, signed int* value)
     bint gbinder_remote_reply_read_uint32(GBinderRemoteReply* reply, unsigned int* value)
-    bint gbinder_remote_reply_read_int64(GBinderRemoteReply* reply, signed long* value)
-    bint gbinder_remote_reply_read_uint64(GBinderRemoteReply* reply, unsigned long* value)
+    bint gbinder_remote_reply_read_int64(GBinderRemoteReply* reply, gint64* value)
+    bint gbinder_remote_reply_read_uint64(GBinderRemoteReply* reply, guint64* value)
     const char* gbinder_remote_reply_read_string8(GBinderRemoteReply* reply)
     char* gbinder_remote_reply_read_string16(GBinderRemoteReply* reply)
     GBinderRemoteObject* gbinder_remote_reply_read_object(GBinderRemoteReply* reply)
@@ -232,8 +240,8 @@ cdef extern from "gbinder/gbinder_remote_request.h":
 
     bint gbinder_remote_request_read_int32(GBinderRemoteRequest* req, signed int* value)
     bint gbinder_remote_request_read_uint32(GBinderRemoteRequest* req, unsigned int* value)
-    bint gbinder_remote_request_read_int64(GBinderRemoteRequest* req, signed long* value)
-    bint gbinder_remote_request_read_uint64(GBinderRemoteRequest* req, unsigned long* value)
+    bint gbinder_remote_request_read_int64(GBinderRemoteRequest* req, gint64* value)
+    bint gbinder_remote_request_read_uint64(GBinderRemoteRequest* req, guint64* value)
     const char* gbinder_remote_request_read_string8(GBinderRemoteRequest* req)
     char* gbinder_remote_request_read_string16(GBinderRemoteRequest* req)
     GBinderRemoteObject* gbinder_remote_request_read_object(GBinderRemoteRequest* self)

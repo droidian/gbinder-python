@@ -114,7 +114,7 @@ cdef class RemoteReply:
     def read_int64(self):
         if self._reply is NULL:
             return None
-        cdef signed long value
+        cdef cgbinder.gint64 value
         cdef bint status
         status = cgbinder.gbinder_remote_reply_read_int64(self._reply, &value)
         return status, value
@@ -122,7 +122,7 @@ cdef class RemoteReply:
     def read_uint64(self):
         if self._reply is NULL:
             return None
-        cdef unsigned long value
+        cdef cgbinder.guint64 value
         cdef bint status
         status = cgbinder.gbinder_remote_reply_read_uint64(self._reply, &value)
         return status, value
@@ -441,7 +441,7 @@ cdef class RemoteRequest:
     def read_int64(self):
         if self._req is NULL:
             return None
-        cdef signed long value
+        cdef cgbinder.gint64 value
         cdef bint status
         status = cgbinder.gbinder_remote_request_read_int64(self._req, &value)
         return status, value
@@ -449,7 +449,7 @@ cdef class RemoteRequest:
     def read_uint64(self):
         if self._req is NULL:
             return None
-        cdef unsigned long value
+        cdef cgbinder.guint64 value
         cdef bint status
         status = cgbinder.gbinder_remote_request_read_uint64(self._req, &value)
         return status, value
@@ -836,13 +836,13 @@ cdef class Reader:
         return status, value
 
     def read_int64(self):
-        cdef signed long value
+        cdef cgbinder.gint64 value
         cdef bint status
         status = cgbinder.gbinder_reader_read_int64(&self._reader, &value)
         return status, value
 
     def read_uint64(self):
-        cdef unsigned long value
+        cdef cgbinder.guint64 value
         cdef bint status
         status = cgbinder.gbinder_reader_read_uint64(&self._reader, &value)
         return status, value
@@ -890,12 +890,12 @@ cdef class Reader:
         return <object>value
 
     def read_hidl_vec(self):
-        cdef unsigned long count, elemsize
+        cdef cgbinder.gsize count, elemsize
         cdef const void* value = cgbinder.gbinder_reader_read_hidl_vec(&self._reader, &count, &elemsize)
         return <object>value, count, elemsize
 
     def read_hidl_vec1(self, unsigned int expected_elemsize):
-        cdef unsigned long count
+        cdef cgbinder.gsize count
         cdef const void* value = cgbinder.gbinder_reader_read_hidl_vec1(&self._reader, &count, expected_elemsize)
         return <object>value, count
 
@@ -931,7 +931,7 @@ cdef class Reader:
         return cgbinder.gbinder_reader_skip_string16(&self._reader)
 
     def read_byte_array(self):
-        cdef unsigned long len
+        cdef cgbinder.gsize len
         cdef const void* value = cgbinder.gbinder_reader_read_byte_array(&self._reader, &len)
         return <object>value, len
 
